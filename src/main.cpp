@@ -12,7 +12,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(g_worldWidth, g_worldHeight), "Falling Sands");
 
     // Create our world for the simulation
-    World w(&window, g_worldWidth, g_worldHeight);
+    World world(&window, g_worldWidth, g_worldHeight);
 
     // run the program as long as the window is open
     while (window.isOpen())

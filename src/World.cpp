@@ -7,7 +7,7 @@ World::World(sf::RenderWindow *window, const int width, const int height) : m_wi
 
     for (auto it = m_grid.begin(); it != m_grid.end(); ++it)
     {
-        *it = 0;
+        *it = PARTICLE_TYPE::AIR;
     }
 
 }
