@@ -23,6 +23,11 @@ private:
     int m_width;
     std::vector<PARTICLE_TYPE> m_grid;
     std::vector<Particle> m_particles;
+
+    // Returns if the coordinates are witin the world's bounds.
+    bool InBounds(const int x, const int y) const;
+    // Clears the world's grid.
+    void ClearGrid();
 };
 
 

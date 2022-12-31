@@ -36,16 +36,19 @@ int main()
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
         {
+            std::cout << "Se cambia el tipo a SAND" << std::endl;
             particle_type = PARTICLE_TYPE::SAND;
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         {
+            std::cout << "Se cambia el tipo a WATER" << std::endl;
             particle_type = PARTICLE_TYPE::WATER;
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
         {
+            std::cout << "Se cambia el tipo a STONE" << std::endl;
             particle_type = PARTICLE_TYPE::STONE;
         }
 
