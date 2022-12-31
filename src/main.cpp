@@ -2,50 +2,70 @@
 #include <SFML/Graphics.hpp>
 
 #include "../inc/World.hpp"
+#include "../inc/Particle.hpp"
 
 const int g_worldWidth = 400;
 const int g_worldHeight = 400;
 
 int main()
 {
-    // create the window
+    // Create the window.
     sf::RenderWindow window(sf::VideoMode(g_worldWidth, g_worldHeight), "Falling Sands");
 
-    // Create our world for the simulation
+    // Create our world for the simulation.
     World world(&window, g_worldWidth, g_worldHeight);
 
-    // run the program as long as the window is open
+    // Create a variable to hold the Particle Type to be created.
+    PARTICLE_TYPE particle_type = PARTICLE_TYPE::SAND;
+
+    // Run the program as long as the window is open.
     while (window.isOpen())
     {
-        // check all the window's events that were triggered since the last iteration of the loop
+        // Check all the window's events that were triggered since the last iteration of the loop.
         sf::Event event;
         while (window.pollEvent(event))
         {
-            // "close requested" event: we close the window
             if (event.type == sf::Event::Closed)
                 window.close();
         }
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
         {
-            // left mouse button is pressed: shoot
-            /*sf::Vector2i pos = sf::Mouse::getPosition(window); // window is a sf::Window
-
-            std::cout << pos.x << "," << pos.y << std::endl;
-            Particle p;
-            p.SetPosition(pos.x, pos.y);
-            p.SetParticleType(PARTICLE_TYPE::SAND);
-            w.AddParticle(p);*/
+            window.close();
         }
 
-        // clear the window with black color
-        window.clear(sf::Color::Black);
-        /*
-        // draw everything here...
-        w.Update();
-        // Finally do the particle simulation
-        w.Draw();*/
-        // end the current frame
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+        {
+            particle_type = PARTICLE_TYPE::SAND;
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+        {
+            particle_type = PARTICLE_TYPE::WATER;
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        {
+            particle_type = PARTICLE_TYPE::STONE;
+        }
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            sf::Vector2i position = sf::Mouse::getPosition(window);
+
+            Particle p(position, particle_type);
+            world.AddParticle(p);
+        }
+
+        // Clear the window.
+        window.clear(sf::Color::Transparent);
+  
+        // Updates the world.
+        //world.Update();
+
+        // Draw all the particles.
+        world.Draw();
+
         window.display();
     }
 

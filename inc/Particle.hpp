@@ -14,8 +14,24 @@ enum PARTICLE_TYPE
 class Particle
 {
 public:
-    Particle(/* args */);
+    // Constructor.
+    Particle(const sf::Vector2i position, const PARTICLE_TYPE type);
+    // Destructor.
     ~Particle();
+    // Copy constructor.
+    Particle(const Particle& rhs);
+    // Copy assignment operator.
+    Particle& operator=(const Particle& rhs);
+    // Move constructor.
+    Particle(Particle&& source);
+    // Move assigment operator.
+    Particle& operator=(Particle&& source);
+    // Draw Particle.
+    void Draw(sf::RenderWindow *window);
+    // Get particle type.
+    PARTICLE_TYPE GetType() const;
+    // Get particle position.
+    sf::Vector2i GetPosition() const;
 
 private:
     PARTICLE_TYPE m_type;
