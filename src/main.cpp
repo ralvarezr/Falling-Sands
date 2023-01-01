@@ -64,7 +64,7 @@ int main()
         window.clear(sf::Color::Transparent);
   
         // Updates the world.
-        //world.Update();
+        world.Update();
 
         // Draw all the particles.
         world.Draw();

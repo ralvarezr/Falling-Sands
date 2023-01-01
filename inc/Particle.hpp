@@ -32,6 +32,8 @@ public:
     PARTICLE_TYPE GetType() const;
     // Get particle position.
     sf::Vector2i GetPosition() const;
+    // Set particle Position.
+    void SetPosition(const int x, const int y);
 
 private:
     PARTICLE_TYPE m_type;

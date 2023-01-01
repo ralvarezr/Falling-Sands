@@ -8,14 +8,16 @@
 class World
 {
 public:
-    // Constructor
+    // Constructor.
     World(sf::RenderWindow* window, const int width, const int height);
-    // Destructor
+    // Destructor.
     ~World();
     // Add Particle to the World.
     void AddParticle(Particle& p);
-    // Draw World
+    // Draw World.
     void Draw();
+    // Update World.
+    void Update();
 
 private:
     sf::RenderWindow* m_window;
@@ -28,6 +30,14 @@ private:
     bool InBounds(const int x, const int y) const;
     // Clears the world's grid.
     void ClearGrid();
+    // Get the Bottom Cell Type.
+    PARTICLE_TYPE GetBottomCellType(int x, int y);
+    // Get the Right Cell Type.
+    PARTICLE_TYPE GetBottomRightCellType(int x, int y);
+    // Get the Left Cell Type.
+    PARTICLE_TYPE GetBottomLeftCellType(int x, int y);
+    // Set a Cell in the Grid with the type specified.
+    void SetCell(const int x, const int y, const PARTICLE_TYPE type);
 };
 
 

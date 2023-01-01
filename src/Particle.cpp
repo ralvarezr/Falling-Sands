@@ -10,21 +10,16 @@ Particle::Particle(const sf::Vector2i position, const PARTICLE_TYPE type) : m_ty
 
 Particle::~Particle()
 {
-    std::cout << "Particula Destruida" << std::endl;
 }
 
 Particle::Particle(const Particle &rhs)
 {
-    std::cout << "Constructor por Copia de Particula" << std::endl;
-
     m_type = rhs.m_type;
     m_position = rhs.m_position;
 }
 
 Particle& Particle::operator=(const Particle &rhs)
 {
-    std::cout << "Copia por Asignacion de Particula" << std::endl;
-
     if (&rhs != this)
     {
         m_type = rhs.m_type;
@@ -36,8 +31,6 @@ Particle& Particle::operator=(const Particle &rhs)
 
 Particle::Particle(Particle &&source)
 {
-    std::cout << "Constructor por Move de Particula" << std::endl;
-    
     m_type = source.m_type;
     source.m_type = PARTICLE_TYPE::AIR;
 
@@ -48,8 +41,6 @@ Particle::Particle(Particle &&source)
 
 Particle& Particle::operator=(Particle &&source)
 {
-    std::cout << "Move por asignacion de Particula" << std::endl;
-
     if (&source != this)
     {
         m_type = source.m_type;
@@ -103,4 +94,10 @@ PARTICLE_TYPE Particle::GetType() const
 sf::Vector2i Particle::GetPosition() const
 {
     return m_position;
+}
+
+void Particle::SetPosition(const int x, const int y)
+{
+    m_position.x = x;
+    m_position.y = y;
 }
