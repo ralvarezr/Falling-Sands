@@ -26,16 +26,16 @@ private:
     std::vector<PARTICLE_TYPE> m_grid;
     std::vector<Particle> m_particles;
 
-    // Returns if the coordinates are witin the world's bounds.
+    // Return if the coordinates are witin the world's bounds.
     bool InBounds(const int x, const int y) const;
-    // Clears the world's grid.
+    // Clear the world's grid.
     void ClearGrid();
-    // Get the Bottom Cell Type.
-    PARTICLE_TYPE GetBottomCellType(int x, int y);
-    // Get the Right Cell Type.
-    PARTICLE_TYPE GetBottomRightCellType(int x, int y);
-    // Get the Left Cell Type.
-    PARTICLE_TYPE GetBottomLeftCellType(int x, int y);
+    // Update the grid with the Particles.
+    void UpdateGrid();
+    // Return if the coordinates corresponds to an empty cell.
+    bool IsEmpty(const int x, const int y) const;
+    // Move the Particles around the grid.
+    void MoveParticles();
     // Set a Cell in the Grid with the type specified.
     void SetCell(const int x, const int y, const PARTICLE_TYPE type);
 };

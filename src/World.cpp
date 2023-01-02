@@ -1,20 +1,15 @@
 #include "../inc/World.hpp"
 
 #include <iostream>
+#include <random>
 
 World::World(sf::RenderWindow *window, const int width, const int height) : m_window{window}, m_height{height}, m_width{width}
 {
-
-    std::cout << "Mundo construido" << std::endl;
-
     m_grid.reserve(m_width * m_height);
-
-    ClearGrid();
 }
 
 World::~World()
 {
-    std::cout << "Mundo destruido" << std::endl;
 }
 
 void World::AddParticle(Particle& p)
@@ -23,11 +18,6 @@ void World::AddParticle(Particle& p)
     if (InBounds(position.x, position.y))
     {
         m_particles.push_back(std::move(p));
-        std::cout << "Se agrega particula nro: " << m_particles.size() << std::endl;
-    }
-    else
-    {
-        std::cout << "Particula fuera de rango, no se agrega" << std::endl;
     }
 }
 
@@ -42,53 +32,16 @@ void World::Draw()
 
 void World::Update()
 {
-    // Clear the grid.
     ClearGrid();
 
-    // Update the grid.
-    for (auto& particle: m_particles)
-    {
-        sf::Vector2i position = particle.GetPosition();
-        m_grid[position.y * m_width + position.x] = particle.GetType();
-    }
+    UpdateGrid();
     
-    // Move the particles.
-    for (auto& particle: m_particles)
-    {
-        sf::Vector2i particle_position = particle.GetPosition();
-
-        PARTICLE_TYPE particle_type = particle.GetType();
-
-        switch (particle_type)
-        {
-        case PARTICLE_TYPE::SAND:
-
-            if (PARTICLE_TYPE::AIR == GetBottomCellType(particle_position.x, particle_position.y))
-            {
-                // Set the current Cell to Air.
-                SetCell(particle_position.x, particle_position.y, PARTICLE_TYPE::AIR);
-                // Move down the Cell.
-                SetCell(particle_position.x, (particle_position.y + 1), particle_type);
-                // Set the new position to the particle.
-                particle.SetPosition(particle_position.x, (particle_position.y + 1));
-            }
-
-            break;
-        
-        default:
-            break;
-        }
-
- 
-
-
-    }
-
+    MoveParticles();
 }
 
 bool World::InBounds(const int x, const int y) const
 {
-    return x >= 0 && y >= 0 && x < m_width && y < m_height;
+    return ((x >= 0) && (y >= 0) && (x < m_width) && (y < m_height));
 }
 
 void World::ClearGrid()
@@ -99,29 +52,128 @@ void World::ClearGrid()
     }
 }
 
-PARTICLE_TYPE World::GetBottomCellType(int x, int y)
-{
-    // If the y coordinate is the maximum possible.
-    if (y >= m_height - 1)
-    {
-        // Substract 2 from the height to get the current cell.
-        y = m_height - 2;
-    }
-
-    return m_grid[(y + 1) * m_width + x];
-}
-
-PARTICLE_TYPE World::GetBottomRightCellType(const int x, const int y)
-{
-    return PARTICLE_TYPE::AIR;
-}
-
-PARTICLE_TYPE World::GetBottomLeftCellType(const int x, const int y)
-{
-    return PARTICLE_TYPE::AIR;
-}
-
 void World::SetCell(const int x, const int y, const PARTICLE_TYPE type)
 {
     m_grid[y * m_width + x] = type;
+}
+
+
+void World::UpdateGrid()
+{
+    for (auto &particle : m_particles)
+    {
+        sf::Vector2i position = particle.GetPosition();
+        m_grid[position.y * m_width + position.x] = particle.GetType();
+    }
+
+}
+
+void World::MoveParticles()
+{
+    for (auto &particle : m_particles)
+    {
+        sf::Vector2i pos = particle.GetPosition();
+
+        PARTICLE_TYPE type = particle.GetType();
+
+        switch (type)
+        {
+        case PARTICLE_TYPE::SAND:
+            {
+                bool down = IsEmpty(pos.x, (pos.y + 1));
+                bool downleft = IsEmpty((pos.x - 1), (pos.y + 1));
+                bool downright = IsEmpty((pos.x + 1), (pos.y + 1));
+
+                if (down)
+                {
+                    SetCell(pos.x, (pos.y + 1), type);
+                    particle.SetPosition(pos.x, (pos.y + 1));
+                    SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
+                }
+                // If downleft and downright are empty, pick one randomly.
+                else if (downleft && downright)
+                {
+                    // Get a random number betweem 0 and 1.
+                    std::random_device rd;  // Will be used to obtain a seed for the random number engine
+                    std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+                    std::uniform_int_distribution<> distrib(0, 1);
+                    bool rand = distrib(gen);
+
+                    downleft = rand ? true : false;
+                    downright = rand ? false : true;
+                }
+                else if (downright)
+                {
+                    SetCell((pos.x + 1), (pos.y + 1), type);
+                    particle.SetPosition((pos.x + 1), (pos.y + 1));
+                    SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
+                }
+                else if (downleft)
+                {
+                    SetCell((pos.x - 1), (pos.y + 1), type);
+                    particle.SetPosition((pos.x - 1), (pos.y + 1));
+                    SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
+                }
+
+                /*if (down || downleft || downright)
+                    SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);*/
+            }
+            break;
+
+        case PARTICLE_TYPE::WATER:
+            {
+                bool down = IsEmpty(pos.x, pos.y + 1);
+                bool left = IsEmpty(pos.x - 1, pos.y);
+                bool right = IsEmpty(pos.x + 1, pos.y);
+
+                if (down)
+                {
+                    SetCell(pos.x, (pos.y + 1), type);
+                    particle.SetPosition(pos.x, (pos.y + 1));
+                    SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
+                }
+                // If left and right are empty, pick one randomly.
+                else if (left && right)
+                {
+                    // Get a random number betweem 0 and 1.
+                    std::random_device rd;  // Will be used to obtain a seed for the random number engine
+                    std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+                    std::uniform_int_distribution<> distrib(0, 1);
+                    bool rand = distrib(gen);
+
+                    left = rand ? true : false;
+                    right = rand ? false : true;
+                }
+                else if (right)
+                {
+                    SetCell((pos.x + 1), pos.y, type);
+                    particle.SetPosition((pos.x + 1), pos.y);
+                    SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
+                }
+                else if (left)
+                {
+                    SetCell((pos.x - 1), pos.y, type);
+                    particle.SetPosition((pos.x - 1), pos.y);
+                    SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
+                }
+            }
+            break;
+
+        case PARTICLE_TYPE::STONE:
+            SetCell(pos.x, pos.y, type);
+            break;
+
+        case PARTICLE_TYPE::AIR:
+            SetCell(pos.x, pos.y, type);
+            break;
+
+        default:
+            break;
+        }
+    }
+}
+
+bool World::IsEmpty(const int x, const int y) const
+{
+    return (InBounds(x, y) && m_grid[y * m_width + x] == PARTICLE_TYPE::AIR);
 }

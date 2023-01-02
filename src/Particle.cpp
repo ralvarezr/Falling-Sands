@@ -4,8 +4,6 @@
 
 Particle::Particle(const sf::Vector2i position, const PARTICLE_TYPE type) : m_type{type}, m_position{position}
 {
-    std::cout << position.x << "," << position.y << std::endl;
-    std::cout << "Particula construida" << std::endl;
 }
 
 Particle::~Particle()
