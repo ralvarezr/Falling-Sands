@@ -118,7 +118,7 @@ void World::MoveParticles()
                 /*if (down || downleft || downright)
                     SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);*/
             }
-            break;
+        break;
 
         case PARTICLE_TYPE::WATER:
             {
@@ -157,18 +157,18 @@ void World::MoveParticles()
                     SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
                 }
             }
-            break;
+        break;
 
         case PARTICLE_TYPE::STONE:
             SetCell(pos.x, pos.y, type);
-            break;
+        break;
 
         case PARTICLE_TYPE::AIR:
             SetCell(pos.x, pos.y, type);
-            break;
+        break;
 
         default:
-            break;
+        break;
         }
     }
 }
