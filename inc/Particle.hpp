@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
-enum PARTICLE_TYPE
+enum class PARTICLE_TYPE
 {
     AIR,
     SAND,
