@@ -80,81 +80,92 @@ void World::MoveParticles()
         {
         case PARTICLE_TYPE::SAND:
             {
-                bool down = IsEmpty(pos.x, (pos.y + 1));
-                bool downleft = IsEmpty((pos.x - 1), (pos.y + 1));
-                bool downright = IsEmpty((pos.x + 1), (pos.y + 1));
 
+                bool down = IsEmpty(pos.x, (pos.y + 1));
                 if (down)
                 {
                     SetCell(pos.x, (pos.y + 1), type);
                     particle.SetPosition(pos.x, (pos.y + 1));
                     SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
                 }
-                // If downleft and downright are empty, pick one randomly.
-                else if (downleft && downright)
+                else
                 {
-                    // Get a random number betweem 0 and 1.
-                    std::random_device rd;  // Will be used to obtain a seed for the random number engine
-                    std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
-                    std::uniform_int_distribution<> distrib(0, 1);
-                    bool rand = distrib(gen);
+                    bool downleft = IsEmpty((pos.x - 1), (pos.y + 1));
+                    bool downright = IsEmpty((pos.x + 1), (pos.y + 1));
+                
+                    // If downleft and downright are empty, pick one randomly.
+                    if (downleft && downright)
+                    {
+                        // Get a random number betweem 0 and 1.
+                        std::random_device rd;  // Will be used to obtain a seed for the random number engine
+                        std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+                        std::uniform_int_distribution<> distrib(0, 1);
+                        bool rand = distrib(gen);
 
-                    downleft = rand ? true : false;
-                    downright = rand ? false : true;
-                }
-                else if (downright)
-                {
-                    SetCell((pos.x + 1), (pos.y + 1), type);
-                    particle.SetPosition((pos.x + 1), (pos.y + 1));
-                    SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
-                }
-                else if (downleft)
-                {
-                    SetCell((pos.x - 1), (pos.y + 1), type);
-                    particle.SetPosition((pos.x - 1), (pos.y + 1));
-                    SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
-                }
+                        downleft = rand ? true : false;
+                        downright = rand ? false : true;
+                    }
+                    
+                    if (downright)
+                    {
+                        SetCell((pos.x + 1), (pos.y + 1), type);
+                        particle.SetPosition((pos.x + 1), (pos.y + 1));
+                        SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
+                    }
+                    
+                    if (downleft)
+                    {
+                        SetCell((pos.x - 1), (pos.y + 1), type);
+                        particle.SetPosition((pos.x - 1), (pos.y + 1));
+                        SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
+                    }
 
-                /*if (down || downleft || downright)
-                    SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);*/
+                }
             }
         break;
 
         case PARTICLE_TYPE::WATER:
             {
-                bool down = IsEmpty(pos.x, pos.y + 1);
-                bool left = IsEmpty(pos.x - 1, pos.y);
-                bool right = IsEmpty(pos.x + 1, pos.y);
 
+
+                bool down = IsEmpty(pos.x, pos.y + 1);
                 if (down)
                 {
                     SetCell(pos.x, (pos.y + 1), type);
                     particle.SetPosition(pos.x, (pos.y + 1));
                     SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
                 }
-                // If left and right are empty, pick one randomly.
-                else if (left && right)
+                else 
                 {
-                    // Get a random number betweem 0 and 1.
-                    std::random_device rd;  // Will be used to obtain a seed for the random number engine
-                    std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
-                    std::uniform_int_distribution<> distrib(0, 1);
-                    bool rand = distrib(gen);
+                    bool left = IsEmpty(pos.x - 1, pos.y);
+                    bool right = IsEmpty(pos.x + 1, pos.y);
+                    
+                    // If left and right are empty, pick one randomly.
+                    if (left && right)
+                    {    
+                        // Get a random number betweem 0 and 1.
+                        std::random_device rd;  // Will be used to obtain a seed for the random number engine
+                        std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+                        std::uniform_int_distribution<> distrib(0, 1);
+                        bool rand = distrib(gen);
 
-                    left = rand ? true : false;
-                    right = rand ? false : true;
-                }
-                else if (right)
-                {
-                    SetCell((pos.x + 1), pos.y, type);
-                    particle.SetPosition((pos.x + 1), pos.y);
-                    SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
-                }
-                else if (left)
-                {
-                    SetCell((pos.x - 1), pos.y, type);
-                    particle.SetPosition((pos.x - 1), pos.y);
-                    SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
+                        left = rand ? true : false;
+                        right = rand ? false : true;
+                    }
+                    
+                    if (right)
+                    {
+                        SetCell((pos.x + 1), pos.y, type);
+                        particle.SetPosition((pos.x + 1), pos.y);
+                        SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
+                    }
+                    
+                    if (left)
+                    {
+                        SetCell((pos.x - 1), pos.y, type);
+                        particle.SetPosition((pos.x - 1), pos.y);
+                        SetCell(pos.x, pos.y, PARTICLE_TYPE::AIR);
+                    }
                 }
             }
         break;
